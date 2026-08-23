@@ -80,7 +80,7 @@
   #cam{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;object-fit:cover;z-index:0;background:#000}
   body.no-cam{background:var(--yellow)}
   body.no-cam #cam{display:none}
-  #camMsg{position:absolute;top:calc(14px + var(--safe-t));left:0;right:0;text-align:center;z-index:5;
+  #camMsg{position:fixed;top:calc(14px + var(--safe-t));left:0;right:0;text-align:center;z-index:5;
     color:#1a1a1a;font-size:13px;font-weight:600;padding:0 30px;display:none}
   body.no-cam #camMsg{display:block}
 
@@ -89,19 +89,19 @@
   #fxLayer.active{pointer-events:auto}
   .sticker{position:absolute;width:38vw;max-width:280px;touch-action:none;will-change:transform}
   #heartMask{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  #fxHint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(150px + var(--safe-b));
+  #fxHint{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + var(--safe-b));
     z-index:9;color:#fff;font-size:12px;font-weight:600;background:rgba(0,0,0,.6);
     padding:7px 14px;border-radius:20px;max-width:80vw;text-align:center;
     pointer-events:none;opacity:0;transition:.3s}
   #fxHint.on{opacity:.92}
 
   /* ---- language button ---- */
-  #langBtn{position:absolute;top:calc(12px + var(--safe-t));right:12px;z-index:30;border:0;
+  #langBtn{position:fixed;top:calc(12px + var(--safe-t));right:12px;z-index:30;border:0;
     background:var(--yellow);color:var(--blue);border-radius:22px;
     padding:8px 13px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px}
   #langBtn .globe{width:17px;height:17px;display:inline-block;background:var(--blue);
     -webkit-mask:url(data:image/png;base64,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) center/contain no-repeat;mask:url(data:image/png;base64,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) center/contain no-repeat}
-  #langMenu{position:absolute;top:calc(52px + var(--safe-t));right:12px;z-index:31;background:var(--blue);
+  #langMenu{position:fixed;top:calc(52px + var(--safe-t));right:12px;z-index:31;background:var(--blue);
     border:0;border-radius:16px;padding:8px 6px;display:none;flex-direction:column;
     min-width:150px}
   #langMenu.on{display:flex}
@@ -131,6 +131,17 @@
   #startBtn:active{filter:brightness(1.15)}
   #startCopy{margin-top:14px;text-align:center;color:#141414;font-weight:400;font-size:11px;line-height:1.5}
   #startCopy .ver{opacity:.7}
+  #installTip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + var(--safe-b));
+    z-index:62;display:none;align-items:center;gap:11px;width:min(92vw,360px);
+    background:var(--blue);color:#fff;border-radius:16px;padding:11px 12px}
+  #installTip .ic{flex:0 0 auto;width:26px;height:26px;display:flex;align-items:center;justify-content:center}
+  #installTip .ic svg{width:26px;height:26px;display:block}
+  #installTip .body{flex:1;min-width:0;text-align:left;line-height:1.35}
+  #installTip .body b{display:block;font-size:12.5px;color:var(--yellow);margin-bottom:2px}
+  #installTip .body span{font-size:12px}
+  #installTip #tipClose{flex:0 0 auto;width:24px;height:24px;border:0;border-radius:50%;
+    background:rgba(255,255,255,.22);color:#fff;font-size:12px;line-height:1;
+    display:flex;align-items:center;justify-content:center}
   @keyframes btnShake{
     0%,10%,100%{transform:translateX(0)}
     2%{transform:translateX(-6px) rotate(-2deg)} 4%{transform:translateX(6px) rotate(2deg)}
@@ -140,7 +151,7 @@
   /* ---- Scrim + sheets ---- */
   #scrim{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:45;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
   #scrim.on{opacity:1;pointer-events:auto}
-  .sheet{position:absolute;left:0;right:0;bottom:0;z-index:50;max-height:84vh;color:#141414;
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-height:84vh;color:#141414;
     background:var(--yellow);border-radius:26px 26px 0 0;
     transform:translateY(103%);transition:transform .3s cubic-bezier(.22,1,.36,1);
     display:flex;flex-direction:column;padding-bottom:var(--safe-b)}
@@ -191,7 +202,7 @@
   .btn:active{filter:brightness(1.12)}
 
   /* ---- Photo filter bar ---- */
-  #filterBar{position:absolute;left:0;right:0;bottom:0;z-index:44;
+  #filterBar{position:fixed;left:0;right:0;bottom:0;z-index:44;
     padding:12px 10px calc(12px + var(--safe-b));
     background:linear-gradient(180deg,rgba(20,14,12,0),rgba(20,14,12,.92) 32%);
     backdrop-filter:blur(8px);display:none;flex-direction:column;gap:10px}
@@ -212,7 +223,7 @@
     background:rgba(60,42,36,.85)}
 
   /* ---- Tab bar ---- */
-  #tabbar{position:absolute;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(4,1fr);
+  #tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(4,1fr);
     gap:2px;padding:9px 8px calc(9px + var(--safe-b));background:none}
   #tabbar button{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;
     gap:5px;padding:4px 2px;border-radius:16px;font-size:11px;font-weight:800;transition:.15s}
@@ -279,6 +290,11 @@
     <p class="intro" id="startIntro"></p>
     <button id="startBtn"></button>
     <div id="startCopy">© 2026 Bryan Pelz<br><span class="ver">1.1</span></div>
+    <div id="installTip">
+      <span class="ic" id="tipIcon"></span>
+      <span class="body"><b id="tipTitle"></b><span id="tipBody"></span></span>
+      <button id="tipClose" aria-label="close">✕</button>
+    </div>
   </div>
 
   <div id="scrim"></div>
@@ -2798,7 +2814,8 @@ var qrcode = function() {
       termsH:"Terms of use", termsP:"This app is just for fun. Point your camera, meet Heo, give her a treat and take a cute photo to share. Be kind to the real dogs around you too.",
       privH:"Privacy", privP:"Nothing you do here is collected or sent anywhere. The camera stays on your device, and photos are only saved or shared when you choose to. No account, no tracking.",
       copyH:"Copyright", copyP:"© 2026 Bryan Pelz. All rights reserved. Heo, her name and her images belong to Bryan Pelz.",
-      dev:"App developed by Mikmaki Interactive."
+      dev:"App developed by Mikmaki Interactive.",
+      installTitle:"Add me to your Home Screen",installIOS:"Tap the Share icon, then “Add to Home Screen”.",installAndroid:"Tap the menu (⋮), then “Add to Home screen”."
     },
     fr:{
       intro:"Coucou, moi c'est Heo, une petite chihuahua blanche de Saïgon. Ouvre ta caméra, donne-moi une friandise et prends une jolie photo.",
@@ -2820,7 +2837,8 @@ var qrcode = function() {
       termsH:"Conditions d'utilisation", termsP:"Cette app est juste pour s'amuser. Vise avec ta caméra, rencontre Heo, donne-lui une friandise et prends une jolie photo à partager. Sois gentil aussi avec les vrais chiens autour de toi.",
       privH:"Confidentialité", privP:"Rien de ce que tu fais ici n'est collecté ni envoyé où que ce soit. La caméra reste sur ton appareil, et les photos ne sont enregistrées ou partagées que si tu le décides. Pas de compte, pas de pistage.",
       copyH:"Droits d'auteur", copyP:"© 2026 Bryan Pelz. Tous droits réservés. Heo, son nom et ses images appartiennent à Bryan Pelz.",
-      dev:"Application développée par Mikmaki Interactive."
+      dev:"Application développée par Mikmaki Interactive.",
+      installTitle:"Ajoute-moi à ton écran d'accueil",installIOS:"Touche Partager, puis « Sur l'écran d'accueil ».",installAndroid:"Touche le menu (⋮), puis « Ajouter à l'écran d'accueil »."
     },
     vi:{
       intro:"Chào, mình là Heo, một cô chihuahua trắng nhỏ xíu ở Sài Gòn. Mở camera lên, cho mình ăn vặt và chụp một tấm hình dễ thương nhé.",
@@ -2842,7 +2860,8 @@ var qrcode = function() {
       termsH:"Điều khoản sử dụng", termsP:"App này chỉ để cho vui. Hướng camera, gặp Heo, cho bé ăn vặt và chụp một tấm hình dễ thương để chia sẻ. Hãy tử tế với những chú chó thật quanh bạn nữa nhé.",
       privH:"Quyền riêng tư", privP:"Mọi thứ bạn làm ở đây đều không bị thu thập hay gửi đi đâu cả. Camera nằm trên máy của bạn, ảnh chỉ được lưu hoặc chia sẻ khi bạn muốn. Không tài khoản, không theo dõi.",
       copyH:"Bản quyền", copyP:"© 2026 Bryan Pelz. Bảo lưu mọi quyền. Heo, tên và hình ảnh của bé thuộc về Bryan Pelz.",
-      dev:"Ứng dụng phát triển bởi Mikmaki Interactive."
+      dev:"Ứng dụng phát triển bởi Mikmaki Interactive.",
+      installTitle:"Thêm mình vào Màn hình chính",installIOS:"Chạm nút Chia sẻ, rồi “Thêm vào MH chính”.",installAndroid:"Chạm menu (⋮), rồi “Thêm vào MH chính”."
     },
     de:{
       intro:"Hallo, ich bin Heo, ein winziger weißer Chihuahua aus Saigon. Öffne die Kamera, gib mir ein Leckerli und mach ein süßes Foto.",
@@ -2864,7 +2883,8 @@ var qrcode = function() {
       termsH:"Nutzungsbedingungen", termsP:"Diese App ist nur zum Spaß. Richte die Kamera aus, triff Heo, gib ihr ein Leckerli und mach ein süßes Foto zum Teilen. Sei auch nett zu den echten Hunden um dich herum.",
       privH:"Datenschutz", privP:"Nichts, was du hier tust, wird gesammelt oder irgendwohin gesendet. Die Kamera bleibt auf deinem Gerät, Fotos werden nur gespeichert oder geteilt, wenn du es möchtest. Kein Konto, kein Tracking.",
       copyH:"Urheberrecht", copyP:"© 2026 Bryan Pelz. Alle Rechte vorbehalten. Heo, ihr Name und ihre Bilder gehören Bryan Pelz.",
-      dev:"App entwickelt von Mikmaki Interactive."
+      dev:"App entwickelt von Mikmaki Interactive.",
+      installTitle:"Füg mich zum Home-Bildschirm hinzu",installIOS:"Tippe auf Teilen, dann „Zum Home-Bildschirm“.",installAndroid:"Tippe auf das Menü (⋮), dann „Zum Startbildschirm“."
     },
     zh:{
       intro:"你好，我是 Heo，来自西贡的一只小小白吉娃娃。打开相机，喂我零食，拍一张可爱的照片吧。",
@@ -2886,7 +2906,8 @@ var qrcode = function() {
       termsH:"使用条款", termsP:"这个应用只是为了好玩。对准相机，认识 Heo，喂它零食，拍一张可爱的照片来分享。也请善待你身边真实的狗狗。",
       privH:"隐私", privP:"你在这里做的一切都不会被收集或发送到任何地方。相机保留在你的设备上，照片只有在你选择时才会保存或分享。没有账户，没有追踪。",
       copyH:"版权", copyP:"© 2026 Bryan Pelz。保留所有权利。Heo、它的名字和图像归 Bryan Pelz 所有。",
-      dev:"应用由 Mikmaki Interactive 开发。"
+      dev:"应用由 Mikmaki Interactive 开发。",
+      installTitle:"把我添加到主屏幕",installIOS:"点按分享图标，然后“添加到主屏幕”。",installAndroid:"点按菜单(⋮)，然后“添加到主屏幕”。"
     },
     es:{
       intro:"Hola, soy Heo, una chihuahua blanca diminuta de Saigón. Abre la cámara, dame una golosina y haz una foto bonita.",
@@ -2908,7 +2929,8 @@ var qrcode = function() {
       termsH:"Términos de uso", termsP:"Esta app es solo para divertirse. Apunta con la cámara, conoce a Heo, dale un premio y haz una foto bonita para compartir. Sé amable también con los perros de verdad que te rodean.",
       privH:"Privacidad", privP:"Nada de lo que haces aquí se recopila ni se envía a ningún sitio. La cámara se queda en tu dispositivo y las fotos solo se guardan o comparten cuando tú quieres. Sin cuenta, sin seguimiento.",
       copyH:"Derechos de autor", copyP:"© 2026 Bryan Pelz. Todos los derechos reservados. Heo, su nombre y sus imágenes pertenecen a Bryan Pelz.",
-      dev:"App desarrollada por Mikmaki Interactive."
+      dev:"App desarrollada por Mikmaki Interactive.",
+      installTitle:"Añádeme a tu pantalla de inicio",installIOS:"Toca Compartir y luego “Añadir a inicio”.",installAndroid:"Toca el menú (⋮) y luego “Añadir a inicio”."
     },
     ru:{
       intro:"Привет, я Heo, крошечная белая чихуахуа из Сайгона. Открой камеру, дай мне лакомство и сделай милое фото.",
@@ -2930,11 +2952,20 @@ var qrcode = function() {
       termsH:"Условия использования", termsP:"Это приложение просто для удовольствия. Наведи камеру, познакомься с Heo, дай ей лакомство и сделай милое фото, чтобы поделиться. Будь добр и к настоящим собакам рядом.",
       privH:"Конфиденциальность", privP:"Ничто из того, что ты здесь делаешь, не собирается и никуда не отправляется. Камера остаётся на твоём устройстве, а фото сохраняются или отправляются только по твоему выбору. Без аккаунта, без слежки.",
       copyH:"Авторское право", copyP:"© 2026 Bryan Pelz. Все права защищены. Heo, её имя и изображения принадлежат Bryan Pelz.",
-      dev:"Приложение разработано Mikmaki Interactive."
+      dev:"Приложение разработано Mikmaki Interactive.",
+      installTitle:"Добавь меня на главный экран",installIOS:"Нажми «Поделиться», затем «На экран «Домой»».",installAndroid:"Открой меню (⋮), затем «Добавить на главный экран»."
     }
   };
 
   let lang = 'en';   // app defaults to English
+
+  /* ---------------- device detection (for install tip) ---------------- */
+  const UA = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(UA) || (/Macintosh/.test(UA) && 'ontouchend' in document);
+  const isAndroid = /Android/.test(UA);
+  const isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+  const SHARE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#FFDE00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg>';
+  const DOTS_SVG  = '<svg viewBox="0 0 24 24" fill="#FFDE00"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
 
   const $ = id => document.getElementById(id);
   const tr = () => T[lang] || T.en;
@@ -3022,6 +3053,12 @@ var qrcode = function() {
     $('copyH').textContent = t.copyH;   $('copyP').textContent = t.copyP;
     $('devP').innerHTML  = t.dev.replace('Mikmaki Interactive',
       '<a href="https://www.tiktok.com/@mikmaki.interactive" target="_blank" rel="noopener">Mikmaki Interactive</a>');
+    // install tip
+    if($('tipTitle')){
+      $('tipTitle').textContent = t.installTitle;
+      $('tipBody').textContent  = isIOS ? t.installIOS : t.installAndroid;
+      $('tipIcon').innerHTML    = isIOS ? SHARE_SVG : DOTS_SVG;
+    }
     // treat
     $('heoHead') && ($('treatHead').textContent = t.treatHead);
     $('treatSub').textContent = t.treatSub;
@@ -3368,6 +3405,17 @@ var qrcode = function() {
   applyLang();
   syncHeoHeight();
   window.addEventListener('resize', syncHeoHeight);
+
+  /* ---- install tip: first visit only, right device, not already installed ---- */
+  (function installTip(){
+    const tip=$('installTip'); if(!tip) return;
+    $('tipClose') && $('tipClose').addEventListener('click',()=>{ tip.style.display='none'; });
+    try{
+      const v=parseInt(localStorage.getItem('heo_visits')||'0',10);
+      if(v<1 && !isStandalone && (isIOS||isAndroid)) tip.style.display='flex';
+      localStorage.setItem('heo_visits', String(v+1));
+    }catch(e){ /* private mode: just skip */ }
+  })();
 
 })();
 
