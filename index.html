@@ -117,22 +117,19 @@
   #langMenu button:nth-child(7){transform:rotate(-3deg)}
 
   /* ---- Start overlay ---- */
-  #startOverlay{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:60;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:12px;text-align:center;
-    padding:24px 24px calc(150px + var(--safe-b));background:var(--yellow)}
+  #startOverlay{position:absolute;top:0;left:0;width:100%;height:100vh;height:100dvh;z-index:60;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;
+    padding:calc(18px + var(--safe-t)) 24px calc(18px + var(--safe-b));background:var(--yellow)}
   #startOverlay.hidden{display:none}
-  #startPet{width:min(74vw,340px);height:auto;max-height:40vh;object-fit:contain}
-  #heoLogo{width:min(82vw,400px);height:auto;max-height:22vh;object-fit:contain;
-    margin-top:-78px;position:relative;z-index:2}
-  #startOverlay .intro{margin:10px 0 0;color:#141414;max-width:340px;line-height:1.45;font-size:14.5px;font-weight:600}
-  #startBtn{position:absolute;left:0;right:0;margin:0 auto;width:max-content;
-    bottom:calc(76px + var(--safe-b));
-    border:0;padding:12px 40px;border-radius:34px;font-size:16px;font-weight:900;
+  #startPet{width:min(62vw,290px);height:auto;max-height:30vh;object-fit:contain}
+  #heoLogo{width:min(72vw,350px);height:auto;max-height:15vh;object-fit:contain;
+    margin-top:-56px;position:relative;z-index:2}
+  #startOverlay .intro{margin:8px 0 0;color:#141414;max-width:340px;line-height:1.4;font-size:14px;font-weight:600}
+  #startBtn{margin-top:12px;border:0;padding:11px 38px;border-radius:34px;font-size:16px;font-weight:900;
     letter-spacing:.3px;color:var(--yellow);background:var(--blue);
     animation:btnShake 4s ease-in-out infinite}
   #startBtn:active{filter:brightness(1.15)}
-  #startCopy{position:absolute;bottom:calc(14px + var(--safe-b));left:0;right:0;text-align:center;
-    color:#141414;font-weight:400;font-size:11px;line-height:1.5}
+  #startCopy{margin-top:14px;text-align:center;color:#141414;font-weight:400;font-size:11px;line-height:1.5}
   #startCopy .ver{opacity:.7}
   @keyframes btnShake{
     0%,10%,100%{transform:translateX(0)}
