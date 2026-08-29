@@ -3203,7 +3203,9 @@ var qrcode = function() {
 
   const FILTERS = ['none','heart'].concat(BREAD_FILTERS.map(f=>f.id));
   let activeFilter = 'none';
-  let sticker = null;
+  let stickers = [];
+  let active = null;
+  let heartOn = false;
   function svgURL(svg){ return 'data:image/svg+xml,'+encodeURIComponent(svg); }
   const FILTER_ART = { none:ART.none, heart:ART.heart };
   const STICKER_META = {};
@@ -3235,22 +3237,43 @@ var qrcode = function() {
     $('tabbar').classList.remove('hide');
     $('fxLayer').classList.remove('active');
     clearFx();
+    activeFilter='none';
     $('fxHint').classList.remove('on');
   }
   $('filterClose').addEventListener('click',()=>{ blip(); exitPhoto(); });
 
   function clearFx(){
-    if(sticker){ sticker.el.remove(); sticker=null; }
-    $('heartMask').style.display='none';
+    stickers.forEach(s=>s.el.remove()); stickers=[]; active=null;
+    heartOn=false; $('heartMask').style.display='none';
+  }
+  function removeSticker(s){
+    s.el.remove();
+    const i=stickers.indexOf(s); if(i>=0) stickers.splice(i,1);
+    if(active===s) active=stickers[stickers.length-1]||null;
+  }
+  function refreshChips(){
+    document.querySelectorAll('#filterStrip .fchip').forEach((c,i)=>{
+      const id=FILTERS[i]; let on=false;
+      if(id==='none') on=(stickers.length===0 && !heartOn);
+      else if(id==='heart') on=heartOn;
+      else on=stickers.some(s=>s.id===id);
+      c.classList.toggle('sel',on);
+    });
   }
 
   function setFilter(f){
     activeFilter=f;
-    clearFx();
-    document.querySelectorAll('#filterStrip .fchip').forEach((c,i)=>c.classList.toggle('sel',FILTERS[i]===f));
-    if(f==='heart'){ drawHeartMask(); showHint(tr().hintHeart); }
-    else if(STICKER_META[f]){ addSticker(f); showHint(tr().hintDrag); }
-    else { showHint(''); }
+    if(f==='none'){ clearFx(); showHint(''); }
+    else if(f==='heart'){
+      stickers.forEach(s=>s.el.remove()); stickers=[]; active=null;
+      heartOn=true; drawHeartMask(); showHint(tr().hintHeart);
+    } else if(STICKER_META[f]){
+      if(heartOn){ heartOn=false; $('heartMask').style.display='none'; }
+      const ex=stickers.filter(s=>s.id===f);
+      if(ex.length){ removeSticker(ex[ex.length-1]); }   // tap again to remove
+      else { addSticker(f); showHint(tr().hintDrag); }
+    }
+    refreshChips();
   }
 
   let hintTimer=null;
@@ -3299,18 +3322,17 @@ var qrcode = function() {
     wrap.appendChild(img);
     $('fxLayer').appendChild(wrap);
     const w=innerWidth*meta.w;
-    sticker={ el:wrap, img:img, x:innerWidth*0.5, y:innerHeight*meta.y, scale:1, rot:0, baseW:w, aspect:(meta.h||0.6) };
-    layoutSticker();
-    // desktop drag fallback (touching the item)
-    wrap.addEventListener('mousedown',e=>{ const bx=sticker.x,by=sticker.y,sx=e.clientX,sy=e.clientY;
-      const mv=ev=>{ sticker.x=bx+(ev.clientX-sx); sticker.y=by+(ev.clientY-sy); layoutSticker(); };
+    const s={ el:wrap, img:img, x:innerWidth*0.5, y:innerHeight*0.5, scale:1, rot:0, baseW:w, aspect:(meta.h||0.6), id:f };
+    wrap.__st=s; stickers.push(s); active=s;
+    layoutSticker(s);
+    wrap.addEventListener('mousedown',e=>{ active=s; const bx=s.x,by=s.y,sx=e.clientX,sy=e.clientY;
+      const mv=ev=>{ s.x=bx+(ev.clientX-sx); s.y=by+(ev.clientY-sy); layoutSticker(s); };
       const up=()=>{ document.removeEventListener('mousemove',mv); document.removeEventListener('mouseup',up); };
       document.addEventListener('mousemove',mv); document.addEventListener('mouseup',up);
     });
   }
-  function layoutSticker(){
-    if(!sticker) return;
-    const s=sticker;
+  function layoutSticker(s){
+    if(!s) return;
     const vw=s.baseW*s.scale, vh=vw*s.aspect;
     const hit=Math.max(vw, vh, MIN_HIT);
     s.el.style.left='0'; s.el.style.top='0';
@@ -3335,36 +3357,39 @@ var qrcode = function() {
     function rebase(ts){
       count=ts.length;
       const c=cen(ts); sCx=c.x; sCy=c.y;
-      bX=sticker.x; bY=sticker.y; bScale=sticker.scale; bRot=sticker.rot;
+      if(active){ bX=active.x; bY=active.y; bScale=active.scale; bRot=active.rot; }
       if(ts.length>=2){ sDist=dis(ts)||1; sAng=ang(ts); }
     }
     layer.addEventListener('touchstart',e=>{
-      if(!sticker) return;
       const ts=list(e);
-      if(ts.length>=2){ mode='xform'; e.preventDefault(); rebase(ts); }
-      else if(ts.length===1 && sticker.el.contains(e.target)){ mode='drag'; e.preventDefault(); rebase(ts); }
-      else { mode=null; }
+      if(ts.length===1){
+        const w=e.target.closest && e.target.closest('.sticker');
+        if(w && w.__st){ active=w.__st; mode='drag'; e.preventDefault(); rebase(ts); }
+        else { mode=null; }
+      } else if(ts.length>=2){
+        if(active){ mode='xform'; e.preventDefault(); rebase(ts); } else { mode=null; }
+      }
     },{passive:false});
     layer.addEventListener('touchmove',e=>{
-      if(!sticker||!mode) return;
+      if(!active||!mode) return;
       const ts=list(e); if(!ts.length) return;
       e.preventDefault();
       if(ts.length!==count){ mode = ts.length>=2 ? 'xform' : 'drag'; rebase(ts); }
       const c=cen(ts);
-      sticker.x=bX+(c.x-sCx);
-      sticker.y=bY+(c.y-sCy);
+      active.x=bX+(c.x-sCx);
+      active.y=bY+(c.y-sCy);
       if(mode==='xform' && ts.length>=2){
-        sticker.scale=Math.max(0.3,Math.min(4, bScale*(dis(ts)/sDist)));
-        sticker.rot=bRot+(ang(ts)-sAng);
+        active.scale=Math.max(0.3,Math.min(4, bScale*(dis(ts)/sDist)));
+        active.rot=bRot+(ang(ts)-sAng);
       }
-      layoutSticker();
+      layoutSticker(active);
     },{passive:false});
     const end=e=>{ const ts=list(e); if(!ts.length){ mode=null; } else { mode = ts.length>=2?'xform':'drag'; rebase(ts); } };
     layer.addEventListener('touchend',end,{passive:false});
     layer.addEventListener('touchcancel',end,{passive:false});
   })();
 
-  window.addEventListener('resize',()=>{ if(activeFilter==='heart' && $('filterBar').classList.contains('on')) drawHeartMask(); });
+  window.addEventListener('resize',()=>{ if(heartOn && $('filterBar').classList.contains('on')) drawHeartMask(); });
 
   /* ---- snap ---- */
   $('snapBtn').addEventListener('click',()=>{ blip(); takePhoto(); });
@@ -3385,7 +3410,7 @@ var qrcode = function() {
     }
 
     // filter overlay
-    if(activeFilter==='heart'){
+    if(heartOn){
       const off=document.createElement('canvas'); off.width=W; off.height=H;
       const ox=off.getContext('2d');
       ox.fillStyle='#FFDE00'; ox.fillRect(0,0,W,H);
@@ -3396,29 +3421,30 @@ var qrcode = function() {
       pts.forEach(p=>ox.lineTo(p[0],p[1])); ox.closePath(); ox.fill();
       ox.globalCompositeOperation='source-over';
       cx.drawImage(off,0,0);
-    } else if(sticker){
+    } else {
       const cam=video.getBoundingClientRect();
       const vw=video.videoWidth, vh=video.videoHeight;
-      const curW=sticker.baseW*sticker.scale;
-      let px, py, dw;
-      if(vw && vh && cam.width && cam.height){
-        // map to actual camera content (cover-fit on screen -> cover-fit in photo)
-        const ss=Math.max(cam.width/vw, cam.height/vh);
-        const dvw=vw*ss, dvh=vh*ss, oxs=(cam.width-dvw)/2, oys=(cam.height-dvh)/2;
-        const u=((sticker.x-cam.left)-oxs)/dvw;
-        const v=((sticker.y-cam.top)-oys)/dvh;
-        const sp=Math.max(W/vw, H/vh);
-        const dpw=vw*sp, dph=vh*sp, oxp=(W-dpw)/2, oyp=(H-dph)/2;
-        px=oxp+u*dpw; py=oyp+v*dph; dw=curW*(sp/ss);
-      } else {
-        px=(sticker.x/innerWidth)*W; py=(sticker.y/innerHeight)*H; dw=curW*(W/innerWidth);
-      }
-      const dh=dw*sticker.aspect;
-      cx.save();
-      cx.translate(px, py);
-      cx.rotate(sticker.rot*Math.PI/180);
-      cx.drawImage(sticker.img, -dw/2, -dh/2, dw, dh);
-      cx.restore();
+      stickers.forEach(st=>{
+        const curW=st.baseW*st.scale;
+        let px, py, dw;
+        if(vw && vh && cam.width && cam.height){
+          const ss=Math.max(cam.width/vw, cam.height/vh);
+          const dvw=vw*ss, dvh=vh*ss, oxs=(cam.width-dvw)/2, oys=(cam.height-dvh)/2;
+          const u=((st.x-cam.left)-oxs)/dvw;
+          const v=((st.y-cam.top)-oys)/dvh;
+          const sp=Math.max(W/vw, H/vh);
+          const dpw=vw*sp, dph=vh*sp, oxp=(W-dpw)/2, oyp=(H-dph)/2;
+          px=oxp+u*dpw; py=oyp+v*dph; dw=curW*(sp/ss);
+        } else {
+          px=(st.x/innerWidth)*W; py=(st.y/innerHeight)*H; dw=curW*(W/innerWidth);
+        }
+        const dh=dw*st.aspect;
+        cx.save();
+        cx.translate(px, py);
+        cx.rotate(st.rot*Math.PI/180);
+        cx.drawImage(st.img, -dw/2, -dh/2, dw, dh);
+        cx.restore();
+      });
     }
 
     // footer band (inside the 9:16 frame)
