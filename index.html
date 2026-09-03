@@ -83,6 +83,17 @@
 
   #cam{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;object-fit:cover;z-index:0;background:#000}
   #cam.mirror{transform:scaleX(-1)}
+  #captureBar{position:fixed;left:0;right:0;bottom:0;z-index:44;display:none;
+    align-items:center;justify-content:center;padding:0 24px calc(26px + var(--safe-b))}
+  #captureBar.on{display:flex}
+  #shutter{width:82px;height:82px;border-radius:50%;border:0;background:transparent;padding:0;
+    display:flex;align-items:center;justify-content:center}
+  #shutter .sdot{width:68px;height:68px;border-radius:50%;background:var(--yellow);
+    box-shadow:0 0 0 4px rgba(255,222,0,.55),0 6px 22px rgba(0,0,0,.45)}
+  #shutter:active{transform:scale(.93)}
+  #capExit{position:absolute;left:22px;width:48px;height:48px;border-radius:50%;border:0;
+    background:rgba(20,14,12,.55);backdrop-filter:blur(8px);color:#fff;font-size:20px;
+    display:flex;align-items:center;justify-content:center}
   #flipCam{position:fixed;top:calc(12px + var(--safe-t));left:12px;z-index:30;border:0;
     background:var(--yellow);width:42px;height:42px;border-radius:50%;
     display:none;align-items:center;justify-content:center;padding:0}
@@ -378,6 +389,10 @@
   <div id="flash"></div>
 
   <!-- PHOTO filter bar -->
+  <div id="captureBar">
+    <button id="capExit" aria-label="close">✕</button>
+    <button id="shutter" aria-label="capture"><span class="sdot"></span></button>
+  </div>
   <div id="filterBar">
     <div id="filterStrip"></div>
     <div id="filterActions">
@@ -2832,7 +2847,7 @@ var qrcode = function() {
       treatSub:"Pick something yummy, then tap Snack. If I like it, I'll send you hearts.",
       snack:"Snack",
       treats:["Croissant","Cooked carrot","Dried beef","Mini Milk-Bone","Cheese bite","Dried crocodile"],
-      snap:"Click!", save:"Save photo", close:"Close",
+      snap:"Click!", share:"Share", save:"Save photo", close:"Close",
       filters:{none:"None",heart:"Heart",hat:"Hat",shades:"Shades",star:"Stars",nonla:"Nón lá",beret:"Beret",bone:"Bone",mouth:"Mouth"},
       hintDrag:"Drag · two fingers to rotate & resize",
       hintHeart:"Frame Heo inside the heart",
@@ -2855,7 +2870,7 @@ var qrcode = function() {
       treatSub:"Choisis un truc bon, puis appuie sur Snack. Si j'aime, je t'envoie des cœurs.",
       snack:"Snack",
       treats:["Croissant","Carotte cuite","Bœuf séché","Mini Milk-Bone","Bout de fromage","Crocodile séché"],
-      snap:"Click!", save:"Enregistrer", close:"Fermer",
+      snap:"Click!", share:"Partager", save:"Enregistrer", close:"Fermer",
       filters:{none:"Aucun",heart:"Cœur",hat:"Chapeau",shades:"Lunettes",star:"Étoiles",nonla:"Nón lá",beret:"Béret",bone:"Os",mouth:"Bouche"},
       hintDrag:"Glisse · deux doigts pour tourner et redimensionner",
       hintHeart:"Cadre Heo dans le cœur",
@@ -2878,7 +2893,7 @@ var qrcode = function() {
       treatSub:"Chọn món ngon rồi bấm Snack. Nếu mình thích, mình sẽ gửi tim cho bạn.",
       snack:"Snack",
       treats:["Bánh sừng bò","Cà rốt luộc","Bò khô","Mini Milk-Bone","Miếng phô mai","Cá sấu khô"],
-      snap:"Click!", save:"Lưu ảnh", close:"Đóng",
+      snap:"Click!", share:"Chia sẻ", save:"Lưu ảnh", close:"Đóng",
       filters:{none:"Không",heart:"Trái tim",hat:"Nón",shades:"Kính",star:"Ngôi sao",nonla:"Nón lá",beret:"Mũ nồi",bone:"Xương",mouth:"Miệng"},
       hintDrag:"Kéo · hai ngón để xoay và đổi cỡ",
       hintHeart:"Đưa Heo vào trong trái tim",
@@ -2901,7 +2916,7 @@ var qrcode = function() {
       treatSub:"Wähl etwas Leckeres und tippe auf Snack. Wenn es mir schmeckt, schicke ich dir Herzen.",
       snack:"Snack",
       treats:["Croissant","Gekochte Karotte","Trockenfleisch","Mini Milk-Bone","Stück Käse","Trockenkrokodil"],
-      snap:"Click!", save:"Foto speichern", close:"Schließen",
+      snap:"Click!", share:"Teilen", save:"Foto speichern", close:"Schließen",
       filters:{none:"Kein",heart:"Herz",hat:"Hut",shades:"Brille",star:"Sterne",nonla:"Nón lá",beret:"Baskenmütze",bone:"Knochen",mouth:"Mund"},
       hintDrag:"Ziehen · zwei Finger zum Drehen & Skalieren",
       hintHeart:"Heo im Herz einrahmen",
@@ -2924,7 +2939,7 @@ var qrcode = function() {
       treatSub:"选一样好吃的，然后点 Snack。要是我喜欢，就会送你爱心。",
       snack:"Snack",
       treats:["牛角包","煮胡萝卜","牛肉干","迷你 Milk-Bone","一小块奶酪","鳄鱼干"],
-      snap:"Click!", save:"保存照片", close:"关闭",
+      snap:"Click!", share:"分享", save:"保存照片", close:"关闭",
       filters:{none:"无",heart:"爱心",hat:"帽子",shades:"墨镜",star:"星星",nonla:"越南斗笠",beret:"贝雷帽",bone:"骨头",mouth:"嘴巴"},
       hintDrag:"拖动 · 双指旋转和缩放",
       hintHeart:"把 Heo 框进爱心里",
@@ -2947,7 +2962,7 @@ var qrcode = function() {
       treatSub:"Elige algo rico y toca Snack. Si me gusta, te mando corazones.",
       snack:"Snack",
       treats:["Croissant","Zanahoria cocida","Carne seca","Mini Milk-Bone","Trozo de queso","Cocodrilo seco"],
-      snap:"Click!", save:"Guardar foto", close:"Cerrar",
+      snap:"Click!", share:"Compartir", save:"Guardar foto", close:"Cerrar",
       filters:{none:"Ninguno",heart:"Corazón",hat:"Gorro",shades:"Gafas",star:"Estrellas",nonla:"Nón lá",beret:"Boina",bone:"Hueso",mouth:"Boca"},
       hintDrag:"Arrastra · dos dedos para girar y redimensionar",
       hintHeart:"Encuadra a Heo dentro del corazón",
@@ -2970,7 +2985,7 @@ var qrcode = function() {
       treatSub:"Выбери что-нибудь вкусное и нажми Snack. Если понравится, пришлю тебе сердечки.",
       snack:"Snack",
       treats:["Круассан","Варёная морковь","Сушёная говядина","Mini Milk-Bone","Кусочек сыра","Сушёный крокодил"],
-      snap:"Click!", save:"Сохранить фото", close:"Закрыть",
+      snap:"Click!", share:"Поделиться", save:"Сохранить фото", close:"Закрыть",
       filters:{none:"Нет",heart:"Сердце",hat:"Шляпа",shades:"Очки",star:"Звёзды",nonla:"Nón lá",beret:"Берет",bone:"Косточка",mouth:"Рот"},
       hintDrag:"Тяни · двумя пальцами вращай и меняй размер",
       hintHeart:"Помести Heo внутрь сердца",
@@ -3099,7 +3114,7 @@ var qrcode = function() {
     $('snackBtn').textContent = t.snack;
     buildTreats();
     // photo
-    $('snapBtn').textContent = t.snap;
+    $('snapBtn').textContent = (typeof snapMode!=='undefined' && snapMode==='edit') ? (t.share||'Share') : t.snap;
     $('savePhoto').textContent = t.save;
     $('photoClose').textContent = t.close;
     buildFilterStrip();
@@ -3256,23 +3271,53 @@ var qrcode = function() {
     });
   }
 
-  function enterPhoto(){
-    $('filterBar').classList.add('on');
-    $('tabbar').classList.add('hide');
-    $('fxLayer').classList.add('active');
+  let snapMode='off';
+  function enterPhoto(){            // step 1: live camera + shutter
+    snapMode='capture';
+    $('captureBar').classList.add('on');
+    $('filterBar').classList.remove('on');
     $('flipCam').style.display='flex';
+    $('tabbar').classList.add('hide');
+    $('fxLayer').classList.remove('active');
+    $('fxHint').classList.remove('on');
+    try{ if(video.srcObject) video.play(); }catch(e){}
+  }
+  function capturePhoto(){          // step 2: freeze frame -> place filters
+    try{ if(video.videoWidth) video.pause(); }catch(e){}
+    snapMode='edit';
+    $('captureBar').classList.remove('on');
+    $('flipCam').style.display='none';
+    $('filterBar').classList.add('on');
+    $('fxLayer').classList.add('active');
+    $('snapBtn').textContent = (tr().share||'Share');
     setFilter('none');
   }
-  function exitPhoto(){
+  function retakePhoto(){           // back to step 1
+    clearFx();
+    activeFilter='none';
+    snapMode='capture';
     $('filterBar').classList.remove('on');
+    $('captureBar').classList.add('on');
+    $('flipCam').style.display='flex';
+    $('fxLayer').classList.remove('active');
+    $('fxHint').classList.remove('on');
+    try{ if(video.srcObject) video.play(); }catch(e){}
+  }
+  function exitPhoto(){             // leave Snap It entirely
+    snapMode='off';
+    $('captureBar').classList.remove('on');
+    $('filterBar').classList.remove('on');
+    $('flipCam').style.display='none';
     $('tabbar').classList.remove('hide');
     $('fxLayer').classList.remove('active');
-    $('flipCam').style.display='none';
     clearFx();
     activeFilter='none';
     $('fxHint').classList.remove('on');
+    try{ if(video.srcObject) video.play(); }catch(e){}
   }
-  $('filterClose').addEventListener('click',()=>{ blip(); exitPhoto(); });
+  $('shutter').addEventListener('click',()=>{ blip(); capturePhoto(); });
+  $('capExit').addEventListener('click',()=>{ blip(); exitPhoto(); });
+  $('filterClose').addEventListener('click',()=>{ blip(); retakePhoto(); });
 
   function clearFx(){
     stickers.forEach(s=>s.el.remove()); stickers=[]; active=null;
