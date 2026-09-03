@@ -2719,7 +2719,7 @@ var qrcode = function() {
 
   const APP_URL = 'https://mikmakiprod.github.io/heo';
   const IG_URL  = 'https://www.instagram.com/itchychihuahua/';
-  const COPY    = '© 2026 Bryan Pelz';
+  const COPY    = '© 2026 Bryan Pelz & Heo';
 
   /* ---------------- flat illustrations ---------------- */
   /* Flat illustration set — black outline, flat fills, no shadows/gradients.
@@ -3483,7 +3483,7 @@ var qrcode = function() {
   $('snapBtn').addEventListener('click',()=>{ blip(); takePhoto(); });
 
   function takePhoto(){
-    const W=1080, H=1920;                 // vertical 9:16 (Instagram / TikTok)
+    const W=1080, H=1350;                 // 4:5 portrait (Instagram post)
     const cv=document.createElement('canvas');
     cv.width=W; cv.height=H;
     const cx=cv.getContext('2d');
@@ -3551,7 +3551,7 @@ var qrcode = function() {
     // footer band (inside the 9:16 frame)
     const foot=Math.round(H*0.095);
     cx.fillStyle='#000CFF'; cx.fillRect(0,H-foot,W,foot);
-    const pad=foot*0.18, qs=foot-pad*2, tx=pad*2+qs;
+    const qpad=Math.round(foot*0.09), qs=foot-qpad*2, tx=qpad+qs+Math.round(foot*0.14);
     const finish=()=>{
       cx.textBaseline='middle'; cx.textAlign='left';
       cx.fillStyle='#ffffff';
@@ -3561,7 +3561,7 @@ var qrcode = function() {
     };
     if(QR_IMG){
       const im=new Image();
-      im.onload=()=>{ cx.drawImage(im,pad,H-foot+pad,qs,qs); finish(); };
+      im.onload=()=>{ cx.drawImage(im,qpad,H-foot+qpad,qs,qs); finish(); };
       im.onerror=finish; im.src=QR_IMG;
     } else finish();
   }
