@@ -3451,10 +3451,20 @@ var qrcode = function() {
     wrap.appendChild(rm);
     $('fxLayer').appendChild(wrap);
     const w=innerWidth*meta.w;
-    const s={ el:wrap, img:img, close:rm, x:innerWidth*0.5, y:innerHeight*0.5, scale:1, rot:0, baseW:w, aspect:(meta.h||0.6), id:f };
+    const s={ el:wrap, img:img, close:rm, x:innerWidth*0.5, y:innerHeight*0.5, scale:1, rot:0, flip:1, baseW:w, aspect:(meta.h||0.6), id:f };
     wrap.__st=s; stickers.push(s); active=s;
     layoutSticker(s);
     rm.addEventListener('click',ev=>{ ev.stopPropagation(); ev.preventDefault(); removeSticker(s); refreshChips(); });
+    let lastTap=0, tsx=0, tsy=0;
+    wrap.addEventListener('touchstart',e=>{ if(e.touches.length===1){ tsx=e.touches[0].clientX; tsy=e.touches[0].clientY; } });
+    wrap.addEventListener('touchend',e=>{
+      const t=e.changedTouches&&e.changedTouches[0]; if(!t) return;
+      if(Math.hypot(t.clientX-tsx,t.clientY-tsy)>12){ lastTap=0; return; }
+      const now=Date.now();
+      if(now-lastTap<320){ active=s; s.flip=-s.flip; layoutSticker(s); e.preventDefault(); lastTap=0; }
+      else lastTap=now;
+    });
+    wrap.addEventListener('dblclick',e=>{ e.preventDefault(); active=s; s.flip=-s.flip; layoutSticker(s); });
     wrap.addEventListener('mousedown',e=>{ active=s; const bx=s.x,by=s.y,sx=e.clientX,sy=e.clientY;
       const mv=ev=>{ s.x=bx+(ev.clientX-sx); s.y=by+(ev.clientY-sy); layoutSticker(s); };
       const up=()=>{ document.removeEventListener('mousemove',mv); document.removeEventListener('mouseup',up); };
@@ -3472,6 +3482,7 @@ var qrcode = function() {
     s.el.style.transform=`translate3d(${s.x}px,${s.y}px,0) translate(-50%,-50%) rotate(${s.rot}deg)`;
     s.img.style.width=vw+'px';
     s.img.style.height=vh+'px';
+    s.img.style.transform=`translate(-50%,-50%) scaleX(${s.flip||1})`;
     if(s.close){
       const off=Math.max(vw,vh)/2;
       s.close.style.left=(hit/2+off*0.72)+'px';
@@ -3585,6 +3596,7 @@ var qrcode = function() {
         cx.save();
         cx.translate(px, py);
         cx.rotate(st.rot*Math.PI/180);
+        cx.scale(st.flip||1, 1);
         cx.drawImage(st.img, -dw/2, -dh/2, dw, dh);
         cx.restore();
       });
