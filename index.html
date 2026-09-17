@@ -73,15 +73,17 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;margin:0}
-  html{background:#000;height:100dvh;height:100vh}
-  body{min-height:100dvh;min-height:100vh}
-  body{width:100%;overflow:hidden;overscroll-behavior:none;background:#000;
+  /* Full-bleed PWA: the safe-area bands show this colour, so it must match the screen.
+     Default = light home (yellow); switched to dark for the camera ambiance in JS. */
+  html,body{background:#FFDE00}
+  html.dark,body.dark{background:#000}
+  body{width:100%;overflow:hidden;overscroll-behavior:none;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:var(--ink);
     -webkit-user-select:none;user-select:none}
-  #app{position:relative;width:100%;height:100dvh;height:100vh;overflow:hidden}
+  #app{position:fixed;inset:0;overflow:hidden}
   img{ -webkit-user-drag:none; user-drag:none;}
 
-  #cam{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;object-fit:cover;z-index:0;background:#000}
+  #cam{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#000}
   #cam.mirror{transform:scaleX(-1)}
   #snapIntro{position:fixed;inset:0;z-index:58;background:rgba(20,14,12,.82);backdrop-filter:blur(4px);
     display:none;align-items:center;justify-content:center;
@@ -123,7 +125,7 @@
   body.no-cam #camMsg{display:block}
 
   /* ---- filter overlay layer (live) ---- */
-  #fxLayer{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:8;pointer-events:none;overflow:hidden}
+  #fxLayer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:8;pointer-events:none;overflow:hidden}
   #fxLayer.active{pointer-events:auto}
   .sticker{position:absolute;touch-action:none;will-change:transform;background:transparent}
   .sticker .simg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -162,7 +164,7 @@
   #langMenu button:nth-child(7){transform:rotate(-3deg)}
 
   /* ---- Start overlay ---- */
-  #startOverlay{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:60;
+  #startOverlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:60;
     background:var(--yellow);touch-action:none}
   #startOverlay.hidden{display:none}
   #startInner{position:fixed;top:0;left:0;right:0;bottom:0;
@@ -182,9 +184,15 @@
   #startBtn:active{filter:brightness(1.15)}
   #startCopy{margin-top:14px;text-align:center;color:#141414;font-weight:400;font-size:11px;line-height:1.5}
   #startCopy .ver{opacity:.7}
-  #installTip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + var(--safe-b));
-    z-index:62;display:none;align-items:center;gap:11px;width:min(92vw,360px);
-    background:var(--blue);color:#fff;border-radius:16px;padding:11px 12px}
+  #installTip{position:fixed;left:50%;bottom:calc(14px + var(--safe-b));
+    z-index:62;display:none;align-items:center;gap:11px;width:min(92vw,380px);
+    background:var(--blue);color:#fff;border-radius:16px;padding:11px 12px;
+    box-shadow:0 12px 34px rgba(0,0,0,.4);transform:translateX(-50%) translateY(24px);opacity:0}
+  #installTip.on{display:flex;animation:tipIn .32s ease forwards}
+  @keyframes tipIn{to{transform:translateX(-50%) translateY(0);opacity:1}}
+  #installTip #tipInstall{flex:0 0 auto;border:0;border-radius:22px;background:var(--yellow);color:var(--blue);
+    font-size:13px;font-weight:900;padding:9px 15px;white-space:nowrap}
+  #installTip #tipInstall:active{transform:scale(.96)}
   #installTip .ic{flex:0 0 auto;width:26px;height:26px;display:flex;align-items:center;justify-content:center}
   #installTip .ic svg{width:26px;height:26px;display:block}
   #installTip .body{flex:1;min-width:0;text-align:left;line-height:1.35}
@@ -200,7 +208,7 @@
   }
 
   /* ---- Scrim + sheets ---- */
-  #scrim{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:45;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
+  #scrim{position:absolute;top:0;left:0;width:100%;height:100%;z-index:45;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
   #scrim.on{opacity:1;pointer-events:auto}
   .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-height:84vh;color:#141414;
     background:var(--yellow);border-radius:26px 26px 0 0;
@@ -292,10 +300,10 @@
   body:not(.started) #tabbar{display:none}
 
   /* ---- Photo preview + flash ---- */
-  #flash{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:70;background:#fff;opacity:0;pointer-events:none}
+  #flash{position:absolute;top:0;left:0;width:100%;height:100%;z-index:70;background:#fff;opacity:0;pointer-events:none}
   #flash.on{animation:fl .26s ease-out}
   @keyframes fl{0%{opacity:.9}100%{opacity:0}}
-  #photoPrev{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:66;background:rgba(12,8,6,.95);display:none;
+  #photoPrev{position:absolute;top:0;left:0;width:100%;height:100%;z-index:66;background:rgba(12,8,6,.95);display:none;
     flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;
     padding-bottom:calc(24px + var(--safe-b))}
   #photoPrev.on{display:flex}
@@ -307,7 +315,7 @@
   #photoClose{color:var(--ink);background:#2a2a2a}
 
   /* ---- thrown treat ---- */
-  #treatFx{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:22;pointer-events:none;display:flex;align-items:center;justify-content:center}
+  #treatFx{position:absolute;top:0;left:0;width:100%;height:100%;z-index:22;pointer-events:none;display:flex;align-items:center;justify-content:center}
   .thrown{width:52vw;max-width:340px;height:52vw;max-height:340px;animation:treatThrow .78s ease-in forwards}
   .thrown svg{width:100%;height:100%;display:block}
   @keyframes treatThrow{
@@ -317,7 +325,7 @@
   }
 
   /* ---- floating hearts ---- */
-  #heartFx{position:absolute;top:0;left:0;width:100%;height:100dvh;height:100vh;z-index:20;pointer-events:none;overflow:hidden}
+  #heartFx{position:absolute;top:0;left:0;width:100%;height:100%;z-index:20;pointer-events:none;overflow:hidden}
   .fheart{position:absolute;bottom:46%;will-change:transform,opacity;
     animation:rise 2.2s ease-out forwards}
   .fheart svg{width:100%;height:100%;display:block}
@@ -356,6 +364,7 @@
     <div id="installTip">
       <span class="ic" id="tipIcon"></span>
       <span class="body"><b id="tipTitle"></b><span id="tipBody"></span></span>
+      <button id="tipInstall" style="display:none"></button>
       <button id="tipClose" aria-label="close">✕</button>
     </div>
   </div>
@@ -2891,7 +2900,7 @@ var qrcode = function() {
       privH:"Privacy", privP:"Nothing you do here is collected or sent anywhere. The camera stays on your device, and photos are only saved or shared when you choose to. No account, no tracking.",
       copyH:"Copyright", copyP:"© 2026 Bryan Pelz. All rights reserved. Heo, her name and her images belong to Bryan Pelz.",
       dev:"App developed by Mikmaki Interactive.",
-      installTitle:"Add me to your Home Screen",installIOS:"Tap the Share icon, then “Add to Home Screen”.",installAndroid:"Tap the menu (⋮), then “Add to Home screen”."
+      installTitle:"Add me to your Home Screen",installIOS:"Tap the Share icon, then “Add to Home Screen”.",installAndroid:"Tap the menu (⋮), then “Add to Home screen”.",installBtn:"Install"
     },
     fr:{
       intro:"Coucou, moi c'est Heo, une petite chihuahua blanche de Saïgon. Ouvre ta caméra, donne-moi une friandise et prends une jolie photo.",
@@ -2915,7 +2924,7 @@ var qrcode = function() {
       privH:"Confidentialité", privP:"Rien de ce que tu fais ici n'est collecté ni envoyé où que ce soit. La caméra reste sur ton appareil, et les photos ne sont enregistrées ou partagées que si tu le décides. Pas de compte, pas de pistage.",
       copyH:"Droits d'auteur", copyP:"© 2026 Bryan Pelz. Tous droits réservés. Heo, son nom et ses images appartiennent à Bryan Pelz.",
       dev:"Application développée par Mikmaki Interactive.",
-      installTitle:"Ajoute-moi à ton écran d'accueil",installIOS:"Touche Partager, puis « Sur l'écran d'accueil ».",installAndroid:"Touche le menu (⋮), puis « Ajouter à l'écran d'accueil »."
+      installTitle:"Ajoute-moi à ton écran d'accueil",installIOS:"Touche Partager, puis « Sur l'écran d'accueil ».",installAndroid:"Touche le menu (⋮), puis « Ajouter à l'écran d'accueil ».",installBtn:"Installer"
     },
     vi:{
       intro:"Chào, mình là Heo, một cô chihuahua trắng nhỏ xíu ở Sài Gòn. Mở camera lên, cho mình ăn vặt và chụp một tấm hình dễ thương nhé.",
@@ -2939,7 +2948,7 @@ var qrcode = function() {
       privH:"Quyền riêng tư", privP:"Mọi thứ bạn làm ở đây đều không bị thu thập hay gửi đi đâu cả. Camera nằm trên máy của bạn, ảnh chỉ được lưu hoặc chia sẻ khi bạn muốn. Không tài khoản, không theo dõi.",
       copyH:"Bản quyền", copyP:"© 2026 Bryan Pelz. Bảo lưu mọi quyền. Heo, tên và hình ảnh của bé thuộc về Bryan Pelz.",
       dev:"Ứng dụng phát triển bởi Mikmaki Interactive.",
-      installTitle:"Thêm mình vào Màn hình chính",installIOS:"Chạm nút Chia sẻ, rồi “Thêm vào MH chính”.",installAndroid:"Chạm menu (⋮), rồi “Thêm vào MH chính”."
+      installTitle:"Thêm mình vào Màn hình chính",installIOS:"Chạm nút Chia sẻ, rồi “Thêm vào MH chính”.",installAndroid:"Chạm menu (⋮), rồi “Thêm vào MH chính”.",installBtn:"Cài đặt"
     },
     de:{
       intro:"Hallo, ich bin Heo, ein winziger weißer Chihuahua aus Saigon. Öffne die Kamera, gib mir ein Leckerli und mach ein süßes Foto.",
@@ -2963,7 +2972,7 @@ var qrcode = function() {
       privH:"Datenschutz", privP:"Nichts, was du hier tust, wird gesammelt oder irgendwohin gesendet. Die Kamera bleibt auf deinem Gerät, Fotos werden nur gespeichert oder geteilt, wenn du es möchtest. Kein Konto, kein Tracking.",
       copyH:"Urheberrecht", copyP:"© 2026 Bryan Pelz. Alle Rechte vorbehalten. Heo, ihr Name und ihre Bilder gehören Bryan Pelz.",
       dev:"App entwickelt von Mikmaki Interactive.",
-      installTitle:"Füg mich zum Home-Bildschirm hinzu",installIOS:"Tippe auf Teilen, dann „Zum Home-Bildschirm“.",installAndroid:"Tippe auf das Menü (⋮), dann „Zum Startbildschirm“."
+      installTitle:"Füg mich zum Home-Bildschirm hinzu",installIOS:"Tippe auf Teilen, dann „Zum Home-Bildschirm“.",installAndroid:"Tippe auf das Menü (⋮), dann „Zum Startbildschirm“.",installBtn:"Installieren"
     },
     zh:{
       intro:"你好，我是 Heo，来自西贡的一只小小白吉娃娃。打开相机，喂我零食，拍一张可爱的照片吧。",
@@ -2987,7 +2996,7 @@ var qrcode = function() {
       privH:"隐私", privP:"你在这里做的一切都不会被收集或发送到任何地方。相机保留在你的设备上，照片只有在你选择时才会保存或分享。没有账户，没有追踪。",
       copyH:"版权", copyP:"© 2026 Bryan Pelz。保留所有权利。Heo、它的名字和图像归 Bryan Pelz 所有。",
       dev:"应用由 Mikmaki Interactive 开发。",
-      installTitle:"把我添加到主屏幕",installIOS:"点按分享图标，然后“添加到主屏幕”。",installAndroid:"点按菜单(⋮)，然后“添加到主屏幕”。"
+      installTitle:"把我添加到主屏幕",installIOS:"点按分享图标，然后“添加到主屏幕”。",installAndroid:"点按菜单(⋮)，然后“添加到主屏幕”。",installBtn:"安装"
     },
     es:{
       intro:"Hola, soy Heo, una chihuahua blanca diminuta de Saigón. Abre la cámara, dame una golosina y haz una foto bonita.",
@@ -3011,7 +3020,7 @@ var qrcode = function() {
       privH:"Privacidad", privP:"Nada de lo que haces aquí se recopila ni se envía a ningún sitio. La cámara se queda en tu dispositivo y las fotos solo se guardan o comparten cuando tú quieres. Sin cuenta, sin seguimiento.",
       copyH:"Derechos de autor", copyP:"© 2026 Bryan Pelz. Todos los derechos reservados. Heo, su nombre y sus imágenes pertenecen a Bryan Pelz.",
       dev:"App desarrollada por Mikmaki Interactive.",
-      installTitle:"Añádeme a tu pantalla de inicio",installIOS:"Toca Compartir y luego “Añadir a inicio”.",installAndroid:"Toca el menú (⋮) y luego “Añadir a inicio”."
+      installTitle:"Añádeme a tu pantalla de inicio",installIOS:"Toca Compartir y luego “Añadir a inicio”.",installAndroid:"Toca el menú (⋮) y luego “Añadir a inicio”.",installBtn:"Instalar"
     },
     ru:{
       intro:"Привет, я Heo, крошечная белая чихуахуа из Сайгона. Открой камеру, дай мне лакомство и сделай милое фото.",
@@ -3035,7 +3044,7 @@ var qrcode = function() {
       privH:"Конфиденциальность", privP:"Ничто из того, что ты здесь делаешь, не собирается и никуда не отправляется. Камера остаётся на твоём устройстве, а фото сохраняются или отправляются только по твоему выбору. Без аккаунта, без слежки.",
       copyH:"Авторское право", copyP:"© 2026 Bryan Pelz. Все права защищены. Heo, её имя и изображения принадлежат Bryan Pelz.",
       dev:"Приложение разработано Mikmaki Interactive.",
-      installTitle:"Добавь меня на главный экран",installIOS:"Нажми «Поделиться», затем «На экран «Домой»».",installAndroid:"Открой меню (⋮), затем «Добавить на главный экран»."
+      installTitle:"Добавь меня на главный экран",installIOS:"Нажми «Поделиться», затем «На экран «Домой»».",installAndroid:"Открой меню (⋮), затем «Добавить на главный экран».",installBtn:"Установить"
     }
   };
 
@@ -3100,7 +3109,12 @@ var qrcode = function() {
   async function boot(){
     initAudio(); blip();
     document.body.classList.add('started');
+    // dark ambiance for the camera (safe-area bands + Android theme-color)
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+    const tc=document.querySelector('meta[name="theme-color"]'); if(tc) tc.setAttribute('content','#000000');
     $('startOverlay').classList.add('hidden');
+    if($('installTip')) $('installTip').style.display='none';
     await startCamera();
   }
 
@@ -3151,6 +3165,7 @@ var qrcode = function() {
       $('tipTitle').textContent = t.installTitle;
       $('tipBody').textContent  = isIOS ? t.installIOS : t.installAndroid;
       $('tipIcon').innerHTML    = isIOS ? SHARE_SVG : DOTS_SVG;
+      if($('tipInstall')) $('tipInstall').textContent = t.installBtn || 'Install';
     }
     // treat
     $('heoHead') && ($('treatHead').textContent = t.treatHead);
@@ -3681,14 +3696,43 @@ var qrcode = function() {
   window.addEventListener('resize', syncHeoHeight);
 
   /* ---- install tip: first visit only, right device, not already installed ---- */
-  (function installTip(){
+  (function installToast(){
     const tip=$('installTip'); if(!tip) return;
-    $('tipClose') && $('tipClose').addEventListener('click',()=>{ tip.style.display='none'; });
-    try{
-      const v=parseInt(localStorage.getItem('heo_visits')||'0',10);
-      if(v<1 && !isStandalone && (isIOS||isAndroid)) tip.style.display='flex';
-      localStorage.setItem('heo_visits', String(v+1));
-    }catch(e){ /* private mode: just skip */ }
+    let dismissed=false;                 // session only (in-memory) -> reappears next launch
+    let deferredPrompt=null;
+    let installed=false;
+    try{ installed = localStorage.getItem('heo_installed')==='1'; }catch(e){}
+
+    function standalone(){
+      return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+             || window.navigator.standalone === true;
+    }
+    function refresh(){
+      const show = !dismissed && !installed && !standalone()
+                   && (isIOS || isAndroid)
+                   && !document.body.classList.contains('started');
+      if(show){
+        $('tipInstall').style.display = deferredPrompt ? '' : 'none';   // Android native prompt only
+        tip.classList.add('on');
+      } else {
+        tip.classList.remove('on');
+      }
+    }
+
+    $('tipClose') && $('tipClose').addEventListener('click',()=>{ dismissed=true; tip.classList.remove('on'); });
+    $('tipInstall') && $('tipInstall').addEventListener('click',async()=>{
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      try{ await deferredPrompt.userChoice; }catch(e){}
+      deferredPrompt=null; $('tipInstall').style.display='none';
+    });
+    window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; refresh(); });
+    window.addEventListener('appinstalled',()=>{
+      installed=true; try{ localStorage.setItem('heo_installed','1'); }catch(e){}
+      tip.classList.remove('on');
+    });
+
+    refresh();
   })();
 
 })();
