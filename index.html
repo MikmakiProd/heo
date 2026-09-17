@@ -83,7 +83,7 @@
   #app{position:fixed;inset:0;overflow:hidden}
   img{ -webkit-user-drag:none; user-drag:none;}
 
-  #cam{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#000}
+  #cam{position:absolute;inset:0;object-fit:cover;z-index:0;background:#000}
   #cam.mirror{transform:scaleX(-1)}
   #snapIntro{position:fixed;inset:0;z-index:58;background:rgba(20,14,12,.82);backdrop-filter:blur(4px);
     display:none;align-items:center;justify-content:center;
@@ -125,7 +125,7 @@
   body.no-cam #camMsg{display:block}
 
   /* ---- filter overlay layer (live) ---- */
-  #fxLayer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:8;pointer-events:none;overflow:hidden}
+  #fxLayer{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden}
   #fxLayer.active{pointer-events:auto}
   .sticker{position:absolute;touch-action:none;will-change:transform;background:transparent}
   .sticker .simg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -164,7 +164,7 @@
   #langMenu button:nth-child(7){transform:rotate(-3deg)}
 
   /* ---- Start overlay ---- */
-  #startOverlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:60;
+  #startOverlay{position:absolute;inset:0;z-index:60;
     background:var(--yellow);touch-action:none}
   #startOverlay.hidden{display:none}
   #startInner{position:fixed;top:0;left:0;right:0;bottom:0;
@@ -208,7 +208,7 @@
   }
 
   /* ---- Scrim + sheets ---- */
-  #scrim{position:absolute;top:0;left:0;width:100%;height:100%;z-index:45;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
+  #scrim{position:absolute;inset:0;z-index:45;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
   #scrim.on{opacity:1;pointer-events:auto}
   .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-height:84vh;color:#141414;
     background:var(--yellow);border-radius:26px 26px 0 0;
@@ -300,10 +300,10 @@
   body:not(.started) #tabbar{display:none}
 
   /* ---- Photo preview + flash ---- */
-  #flash{position:absolute;top:0;left:0;width:100%;height:100%;z-index:70;background:#fff;opacity:0;pointer-events:none}
+  #flash{position:absolute;inset:0;z-index:70;background:#fff;opacity:0;pointer-events:none}
   #flash.on{animation:fl .26s ease-out}
   @keyframes fl{0%{opacity:.9}100%{opacity:0}}
-  #photoPrev{position:absolute;top:0;left:0;width:100%;height:100%;z-index:66;background:rgba(12,8,6,.95);display:none;
+  #photoPrev{position:absolute;inset:0;z-index:66;background:rgba(12,8,6,.95);display:none;
     flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;
     padding-bottom:calc(24px + var(--safe-b))}
   #photoPrev.on{display:flex}
@@ -315,7 +315,7 @@
   #photoClose{color:var(--ink);background:#2a2a2a}
 
   /* ---- thrown treat ---- */
-  #treatFx{position:absolute;top:0;left:0;width:100%;height:100%;z-index:22;pointer-events:none;display:flex;align-items:center;justify-content:center}
+  #treatFx{position:absolute;inset:0;z-index:22;pointer-events:none;display:flex;align-items:center;justify-content:center}
   .thrown{width:52vw;max-width:340px;height:52vw;max-height:340px;animation:treatThrow .78s ease-in forwards}
   .thrown svg{width:100%;height:100%;display:block}
   @keyframes treatThrow{
@@ -325,7 +325,7 @@
   }
 
   /* ---- floating hearts ---- */
-  #heartFx{position:absolute;top:0;left:0;width:100%;height:100%;z-index:20;pointer-events:none;overflow:hidden}
+  #heartFx{position:absolute;inset:0;z-index:20;pointer-events:none;overflow:hidden}
   .fheart{position:absolute;bottom:46%;will-change:transform,opacity;
     animation:rise 2.2s ease-out forwards}
   .fheart svg{width:100%;height:100%;display:block}
